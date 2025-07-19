@@ -26,15 +26,15 @@
             <div class="col-md-6">
                 <label><strong>Sözleşme Türü:</strong></label>
                 <p>@Model.SozlesmeTuru</p>
-            </div> 
-             <div class="col-md-6">
+            </div>
+            <div class="col-md-6">
                 <label><strong>Sözleşme Süresi:</strong></label>
                 <p>@Model.SozlesmeSuresi</p>
-            </div> 
+            </div>
             <div class="col-md-6">
                 <label><strong>İmza/Onay Tarihi:</strong></label>
                 <p>@(Model.ImzaOnayTarihi?.ToString("dd/MM/yyyy"))</p>
-            </div> 
+            </div>
             <div class="col-md-6">
                 <label><strong>Bitiş Tarihi:</strong></label>
                 <p>@(Model.FinisDate?.ToString("dd/MM/yyyy"))</p>
@@ -170,11 +170,35 @@
 
 <div class="row">
     <div class="col-md-12 text-end">
-        <form asp-controller="Status" asp-action="Onayla" method="post" class="d-inline">
-            <input type="hidden" name="contractId" value="@Model.Id" />
-            <button type="submit" class="btn btn-success">Onayla</button>
-        </form>
+        <button class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#sendModal" data-contract-id="@Model.Id">Personele Gönder</button>
         <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#rejectModal">Reddet</button>
+    </div>
+</div>
+
+<!-- Gönder Modal -->
+<div class="modal fade" id="sendModal" tabindex="-1" aria-labelledby="sendModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="sendModalLabel">Sözleşmeyi Gönder</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="sendContractForm" asp-controller="Status" asp-action="KarsiBirimGonder" method="post">
+                    <input type="hidden" name="contractId" id="contractId" />
+                    <div class="form-group">
+                        <label for="subordinateId">Personel Seç</label>
+                        <select name="subordinateId" id="subordinateId" class="form-control" required>
+                            <option value="">Bir personel seçin</option>
+                        </select>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">İptal</button>
+                        <button type="submit" class="btn btn-primary">Gönder</button>
+                    </div>
+                </form>
+            </div>
+        </div>
     </div>
 </div>
 
@@ -205,4 +229,44 @@
 
 @section Scripts {
     <script src="~/lib/bootstrap/js/bootstrap.bundle.min.js"></script>
+
+
+    <script>
+        $(document).ready(function () {
+
+
+            $('#sendModal').on('show.bs.modal', function (event) {
+                var button = $(event.relatedTarget);
+                var contractId = button.data('contract-id');
+                var modal = $(this);
+                modal.find('#contractId').val(contractId);
+
+                $.ajax({
+                    url: '/Status/GetSubordinates',
+                    type: 'GET',
+                    data: { contractId: contractId },
+                    success: function (data) {
+                        var select = modal.find('#subordinateId');
+                        select.empty();
+                        select.append('<option value="">Bir personel seçin</option>');
+                        $.each(data, function (index, user) {
+                            select.append('<option value="' + user.id + '">' + user.name + '</option>');
+                        });
+                    },
+                    error: function (xhr, status, error) {
+                        console.error('Personel listesi yüklenemedi:', error);
+                        alert('Personel listesi yüklenemedi.');
+                    }
+                });
+            });
+
+            $('#sendContractForm').submit(function (e) {
+                var subordinateId = $('#subordinateId').val();
+                if (!subordinateId) {
+                    e.preventDefault();
+                    alert('Lütfen bir personel seçin.');
+                }
+            });
+        });
+    </script>
 }

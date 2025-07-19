@@ -679,7 +679,40 @@ namespace SozlesmeSistemi.Controllers
             return View(contracts);
         }
 
+        [HttpGet]
+        public IActionResult KarsiSozlesmeIncelemeleri(int id)
+        {
+            var sozlesme = _context.Contracts
+                .Include(c => c.User)
+                .Include(c => c.OurUnit)
+                .Include(c => c.CounterUnit)
+                .Include(c => c.ContractSigners)
+                 .ThenInclude(cs => cs.User)
+                .FirstOrDefault(c => c.Id == id);
 
+            if (sozlesme == null)
+            {
+                return NotFound();
+            }
+
+            var userId = int.Parse(_httpContextAccessor.HttpContext.User.FindFirst("UserId")?.Value ?? "0");
+            //if (sozlesme.ManagerId != userId || sozlesme.CurrentStatus != "grup yoneticisi İnceliyor")
+            //{
+            //    return Unauthorized("Bu sözleşmeyi inceleme yetkiniz yok.");
+            //}
+
+            ViewBag.ImzalayanKisiler = _context.ContractSigners
+                .Where(cs => cs.ContractId == id && cs.Role == "Imzalayan")
+                .Select(cs => cs.User.Username)
+                .ToList();
+
+            ViewBag.ParaflayanKisiler = _context.ContractSigners
+                .Where(cs => cs.ContractId == id && cs.Role == "Paraflayan")
+                .Select(cs => cs.User.Username)
+                .ToList();
+
+            return View(sozlesme);
+        }
 
         [HttpGet]
         public IActionResult IncelemeSayfasi(int id)

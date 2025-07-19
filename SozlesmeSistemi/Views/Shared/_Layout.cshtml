@@ -3,14 +3,15 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    @* <title>@ViewData["Title"] - SozlesmeSistemi</title> *@
+    <title>@ViewData["Title"] - SozlesmeSistemi</title>
     <title>Sözleşme Sistemi </title>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
-    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    @*      <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" /> *@
     <link rel="stylesheet" href="~/SozlesmeSistemi.styles.css" asp-append-version="true" />
 
     <!--boostrap css file-->
-    <link rel="stylesheet" href="~/css/bootstrap.min.css" asp-append-version="true" />
+    @*      <link rel="stylesheet" href="~/css/bootstrap.min.css" asp-append-version="true" />
+    *@
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/lib/sweetalert2.min.css">
     <link rel="stylesheet" href="~/css/tinymce-custom.css" />
@@ -77,7 +78,7 @@
                 }
                 <li class="sidebar-item">
                     <a href="#contractRequests" class="sidebar-link collapsed has-dropdown" data-bs-toggle="collapse" aria-expanded="false" aria-controls="contractRequests">
-                        <img src="~/icons/writing.png" alt="Logo" class="lni-grid-alt" />
+                        <img src="~/icons/images1.png" alt="Sözleşme İstekleri" style="width: 20px; height: 20px;" />
                         <span>Sözleşme İstekleri</span>
                     </a>
                     <ul id="contractRequests" class="sidebar-dropdown list-unstyled collapse">
@@ -93,7 +94,7 @@
                         @if (userRole == 1)
                         {
                             <li class="sidebar-item">
-                                <a asp-controller="ContractRequest" asp-action="MyRequests" class="sidebar-link">Bana Gelen İstekler</a>
+                                <a asp-controller="ContractRequest" asp-action="MyRequests" class="sidebar-link">Gelen İstekler</a>
                             </li>
 
                             <li class="sidebar-item">
@@ -103,86 +104,98 @@
                         @if (userRole == 3)
                         {
                             <li class="sidebar-item">
-                                <a asp-controller="ContractRequest" asp-action="AssignedRequests" class="sidebar-link">Eklemen Gereken Sözleşmeler</a>
+                                <a asp-controller="ContractRequest" asp-action="AssignedRequests" class="sidebar-link">Sözleşme Ekle</a>
                             </li>
 
                             <li class="sidebar-item">
-                                <a asp-controller="Sozlesme" asp-action="DuzenlememGerekenSozlesmeler"class="sidebar-link">Düzenlemem Gereken Sözleşmeler</a>
+                                <a asp-controller="Sozlesme" asp-action="DuzenlememGerekenSozlesmeler" class="sidebar-link">Sözleşme Düzenle</a>
                             </li>
                         }
                     </ul>
                 </li>
-               
-                    <li class="sidebar-item">
-                        <a href="#" class="sidebar-link collapsed has-dropdown" data-bs-toggle="collapse" data-bs-target="#multi" aria-expanded="false" aria-controls="multi">
-                            <img src="~/icons/document.png" alt="Logo" class="lni-grid-alt" />
-                            <span>Belgeler</span>
-                        </a>
-                        <ul id="multi" class="sidebar-dropdown list-unstyled collapse" data-bs-parent="#sidebar">
-                            <li class="sidebar-item">
-                                <a href="#" class="sidebar-link collapsed" data-bs-toggle="collapse" data-bs-target="#multi-two-bekleyenler" aria-expanded="false" aria-controls="multi-two-bekleyenler">
-                                    Bekleyenler
-                                </a>
-                                <ul id="multi-two-bekleyenler" class="sidebar-dropdown list-unstyled collapse">
-                                    <li class="sidebar-item">
-                                        <a asp-controller="Status" asp-action="ImzaBekleyenler" class="sidebar-link">İmza Bekleyenler</a>
-                                    </li>
+
+                <li class="sidebar-item">
+                    <a href="#" class="sidebar-link collapsed has-dropdown" data-bs-toggle="collapse" data-bs-target="#multi" aria-expanded="false" aria-controls="multi">
+                        <img src="~/icons/document.png" alt="Logo" class="lni-grid-alt" />
+                        <span>Belgeler</span>
+                    </a>
+                    <ul id="multi" class="sidebar-dropdown list-unstyled collapse" data-bs-parent="#sidebar">
+                        <li class="sidebar-item">
+                            <a href="#" class="sidebar-link collapsed" data-bs-toggle="collapse" data-bs-target="#multi-two-bekleyenler" aria-expanded="false" aria-controls="multi-two-bekleyenler">
+                                Bekleyenler
+                            </a>
+                            <ul id="multi-two-bekleyenler" class="sidebar-dropdown list-unstyled collapse">
+                                <li class="sidebar-item">
+                                    <a asp-controller="Status" asp-action="ImzaBekleyenler" class="sidebar-link">İmza Bekleyenler</a>
+                                </li>
                                 <li class="sidebar-item">
                                     <a asp-controller="Status" asp-action="ParafBekleyenler" class="sidebar-link">Paraf Bekleyenler</a> <!-- 🌟 EKLENDİ -->
                                 </li>
-                                @* @if (userRole == 3){ *@
+                               
+                            </ul>
+                        </li>
+                        <li class="sidebar-item">
+                            <a href="#" class="sidebar-link collapsed" data-bs-toggle="collapse" data-bs-target="#multi-two-islenenler" aria-expanded="false" aria-controls="multi-two-islenenler">
+                                İşlenenler
+                            </a>
+                            <ul id="multi-two-islenenler" class="sidebar-dropdown list-unstyled collapse">
                                 <li class="sidebar-item">
-                                    <a asp-controller="Status" asp-action="KarsidanGelenler" class="sidebar-link">Karşıdan Gelenler</a>
+                                    <a asp-controller="Status" asp-action="Imzalananlar" class="sidebar-link">İmzalananlar</a>
                                 </li>
-                                @* } *@
-                                     @if (userRole == 1 )
+                                @* <li class="sidebar-item">
+                                    <a href="#" class="sidebar-link">İşleme Alınanlar</a>
+                                </li> *@
+                                <li class="sidebar-item">
+                                    <a asp-controller="ContractStatus" asp-action="Cancelled" class="sidebar-link">İptal Edilenler</a>
+                                </li>
+                            </ul>
+                        </li>
+                    </ul>
+                </li>
+
+                <li class="sidebar-item">
+                    <a href="#" class="sidebar-link collapsed has-dropdown" data-bs-toggle="collapse" data-bs-target="#karsibirim" aria-expanded="false" aria-controls="karsibirim">
+                        <img src="~/icons/workflow1.png" alt="Karşı Birim İşlemleri" class="lni-grid-alt" />
+                        <span>Karşı Birim İşlemleri</span>
+                    </a>
+                    <ul id="karsibirim" class="sidebar-dropdown list-unstyled collapse" data-bs-parent="#sidebar">
+                        @if (userRole == 3)
                         {
-                                    <li class="sidebar-item">
-                                        <a asp-controller="Status" asp-action="IncelemeBekleyenler" class="sidebar-link">İnceleme Bekleyenler</a>
-                                    </li>
-                                  
+                        <li class="sidebar-item">
+                            <a asp-controller="Status" asp-action="KarsidanGelenler" class="sidebar-link">Karşı Sözleşmeler</a>
+                        </li>
                         }
-                                </ul>
-                            </li>
+                        @if (userRole == 1)
+                        {
                             <li class="sidebar-item">
-                                <a href="#" class="sidebar-link collapsed" data-bs-toggle="collapse" data-bs-target="#multi-two-islenenler" aria-expanded="false" aria-controls="multi-two-islenenler">
-                                    İşlenenler
-                                </a>
-                                <ul id="multi-two-islenenler" class="sidebar-dropdown list-unstyled collapse">
-                                    <li class="sidebar-item">
-                                        <a asp-controller="Status" asp-action="Imzalananlar" class="sidebar-link">İmzalananlar</a>
-                                    </li>
-                                    <li class="sidebar-item">
-                                        <a href="#" class="sidebar-link">İşleme Alınanlar</a>
-                                    </li>
-                                    <li class="sidebar-item">
-                                        <a asp-controller="ContractStatus" asp-action="Cancelled" class="sidebar-link">İptal Edilenler</a>
-                                    </li>
-                                </ul>
+                                <a asp-controller="Status" asp-action="IncelemeBekleyenler" class="sidebar-link">İnceleme Bekleyenler</a>
                             </li>
-                        </ul>
-                    </li>
-                    <li class="sidebar-item">
-                        <a asp-controller="Reminder" asp-action="Index" class="sidebar-link">
-                            <img src="~/icons/reminder.png" alt="Logo" class="lni-grid-alt" />
-                            <span>Hatırlatmalar</span>
-                        </a>
-                    </li>
-                    <li class="sidebar-item">
-                        <a href="#" class="sidebar-link">
-                            <img src="~/icons/document.png" alt="Logo" class="lni-grid-alt" />
-                            <span>Raporlar Ve Yedeklemeler</span>
-                        </a>
-                    </li>
-                
+
+                        }
+                    </ul>
+                </li>
+
+                <li class="sidebar-item">
+                    <a asp-controller="Reminder" asp-action="Index" class="sidebar-link">
+                        <img src="~/icons/reminder.png" alt="Logo" class="lni-grid-alt" />
+                        <span>Hatırlatmalar</span>
+                    </a>
+                </li>
+                <li class="sidebar-item">
+                    <a href="#" class="sidebar-link">
+                        <img src="~/icons/document.png" alt="Logo" class="lni-grid-alt" />
+                        <span>Raporlar Ve Yedeklemeler</span>
+                    </a>
+                </li>
+
                 <!-- Alt Kısım Öğeleri -->
-              
+
             </ul>
             <li class="sidebar-item">
                 <a asp-controller="Notification" asp-action="Index" class="sidebar-link">
                     <img src="~/icons/notification.png" alt="Logo" class="lni-grid-alt" />
 
-                    
+
                     @await Component.InvokeAsync("UnreadNotification")
                     <span>Bildirimler</span>
                 </a>
@@ -221,8 +234,8 @@
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
 
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="~/js/site.js" asp-append-version="true"></script>
-    @await RenderSectionAsync("Scripts", required: false)
+    @*      <script src="~/js/site.js" asp-append-version="true"></script>
+    *@    @await RenderSectionAsync("Scripts", required: false)
 
 
     <!-- boostrap js files-->

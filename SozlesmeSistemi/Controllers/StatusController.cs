@@ -117,9 +117,10 @@ namespace SozlesmeSistemi.Controllers
             }
 
             var contracts = _context.Contracts
+                .Include(r => r.OurUnit)
                 .Include(c => c.User)
                 .Include(c => c.ContractSigners)
-                    .ThenInclude(cs => cs.User)
+                .ThenInclude(cs => cs.User)
                 .Where(c => c.CurrentStatus == "Karşı Birim Onayında" && c.ManagerId == userId)
                 .ToList() ?? new List<Contract>();
 
@@ -386,10 +387,10 @@ namespace SozlesmeSistemi.Controllers
                 return Unauthorized("Kullanıcı kimliği bulunamadı.");
             }
 
-            if (contract.ManagerId != userId || contract.CurrentStatus != "grup yoneticisi İnceliyor")
-            {
-                return Unauthorized("Bu sözleşmeyi reddetme yetkiniz yok.");
-            }
+            //if (contract.ManagerId != userId || contract.CurrentStatus != "grup yoneticisi İnceliyor")
+            //{
+            //    return Unauthorized("Bu sözleşmeyi reddetme yetkiniz yok.");
+            //}
 
             try
             {
@@ -417,6 +418,56 @@ namespace SozlesmeSistemi.Controllers
             }
         }
 
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult KarsiReddet(int contractId, string rejectionReason)
+        {
+            var contract = _context.Contracts
+                .Include(c => c.ContractSigners)
+                .FirstOrDefault(c => c.Id == contractId);
+
+            if (contract == null)
+            {
+                return NotFound();
+            }
+
+            var userIdClaim = HttpContext.User.FindFirst("UserId")?.Value;
+            if (string.IsNullOrEmpty(userIdClaim) || !int.TryParse(userIdClaim, out int userId))
+            {
+                return Unauthorized("Kullanıcı kimliği bulunamadı.");
+            }
+
+            //if (contract.ManagerId != userId || contract.CurrentStatus != "grup yoneticisi İnceliyor")
+            //{
+            //    return Unauthorized("Bu sözleşmeyi reddetme yetkiniz yok.");
+            //}
+
+            try
+            {
+                // Red durumunu ve gerekçeyi kaydet
+                _contractStatusService.AddStatus(contractId, "Karşı Grup Yöneticisi Reddetti", userId, rejectionReason);
+
+                // Sözleşme sahibine red bildirimi gönder
+                var notificationToOwner = new Notification
+                {
+                    ReceiverId = contract.UserId,
+                    SenderId = userId,
+                    ContractId = contract.Id,
+                    ActionType = "Sözleşme Reddedildi",
+                    Message = $"'{contract.Title}' adlı sözleşme reddedildi. Gerekçe: {rejectionReason}",
+                    CreatedDate = DateTime.Now
+                };
+                _notificationService.AddNotification(notificationToOwner);
+
+                return RedirectToAction("OnaylanacakSozlesmeler", "Sozlesme");
+            }
+            catch (Exception ex)
+            {
+                ModelState.AddModelError("", $"Reddetme sırasında hata oluştu: {ex.Message}");
+                return RedirectToAction("OnaylanacakSozlesmeler", "Sozlesme");
+            }
+        }
 
 
 
