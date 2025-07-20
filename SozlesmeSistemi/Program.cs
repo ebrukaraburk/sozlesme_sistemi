@@ -13,7 +13,7 @@ builder.Services.AddScoped<ReminderService>();
 builder.Services.AddScoped<IContractRequestService, ContractRequestService>();
 builder.Services.AddScoped<NotificationService>();
 builder.Services.AddScoped<IContractStatusService, ContractStatusService>();
-
+builder.Services.AddScoped<IStatisticsService, StatisticsService>();//edagrafik
 // SozlesmeSistemiDbContext'i ekle
 builder.Services.AddDbContext<SozlesmeSistemiDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
